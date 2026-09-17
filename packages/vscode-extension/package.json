@@ -1,0 +1,450 @@
+{
+  "name": "abap-cleaner-vscode-dev",
+  "displayName": "ABAP Cleaner",
+  "description": "Automated ABAP cleaner formatting and linting.",
+  "version": "0.1.0",
+  "publisher": "abap-cleaner-dev",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SAP/abap-cleaner.git"
+  },
+  "engines": {
+    "vscode": "^1.109.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "categories": [
+    "Formatters",
+    "Linters"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "ABAP Cleaner",
+      "properties": {
+        "abapCleaner.profile": {
+          "type": "string",
+          "enum": [
+            "default",
+            "essential"
+          ],
+          "default": "default",
+          "description": "Base cleanup profile."
+        },
+        "abapCleaner.abapRelease": {
+          "type": ["string", "null"],
+          "enum": [null, "740", "750", "751", "752", "753", "754", "755", "756", "757", "758"],
+          "default": null,
+          "description": "Optional target ABAP release used to gate release-sensitive cleanup rules."
+        },
+        "abapCleaner.lint.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Publish diagnostics for cleanup rules that would change the document."
+        },
+        "abapCleaner.lint.severity": {
+          "type": "string",
+          "enum": ["information", "hint", "warning", "error"],
+          "default": "information",
+          "description": "Severity for ABAP Cleaner diagnostics."
+        },
+        "abapCleaner.lint.run": {
+          "type": "string",
+          "enum": ["onSave", "onType"],
+          "default": "onSave",
+          "description": "When to refresh ABAP Cleaner diagnostics."
+        },
+        "abapCleaner.rules.EXPORTING_KEYWORD.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Omit optional EXPORTING."
+        },
+        "abapCleaner.rules.CLOSING_BRACKETS_POSITION.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Close brackets at line end."
+        },
+        "abapCleaner.rules.ASSERT_EQUALS_BOOLEAN.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Use assert_true and assert_false."
+        },
+        "abapCleaner.rules.ASSERT_CLASS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable bounded ASSERT_CLASS modernization."
+        },
+        "abapCleaner.rules.ASSERT_CLASS.assertClassName": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Class called by bounded ASSERT_CLASS modernization."
+        },
+        "abapCleaner.rules.ASSERT_EQUALS_SUBRC.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Use assert_subrc instead of assert_equals."
+        },
+        "abapCleaner.rules.ASSERT_PARAMETER_ORDER.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Standardize assertion parameter order."
+        },
+        "abapCleaner.rules.STRING_TEMPLATE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Use string templates to assemble text."
+        },
+        "abapCleaner.rules.CHECK_IN_LOOP.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Convert CHECK in loop to IF NOT ... CONTINUE."
+        },
+        "abapCleaner.rules.CHECK_OUTSIDE_LOOP.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Convert CHECK outside loop to IF NOT ... RETURN."
+        },
+        "abapCleaner.rules.CALL_METHOD.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Replace CALL METHOD with functional call."
+        },
+        "abapCleaner.rules.ABAP_DOC_LANG.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove lang=\"en\" from ABAP Doc."
+        },
+        "abapCleaner.rules.ESCAPE_CHAR_FOR_PARAMS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable bounded parameter escape cleanup."
+        },
+        "abapCleaner.rules.IMPLICIT_TYPE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Make implicit type explicit."
+        },
+        "abapCleaner.rules.NEEDLESS_CLEAR.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove needless CLEAR."
+        },
+        "abapCleaner.rules.EMPTY_SECTIONS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable removal of empty protected sections from final local classes."
+        },
+        "abapCleaner.rules.CALCULATION_ASSIGNMENT.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable calculation assignments for ABAP 7.54 or later."
+        },
+        "abapCleaner.rules.ADD_TO_ETC.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable ADD, SUBTRACT, MULTIPLY, and DIVIDE modernization for ABAP 7.54 or later."
+        },
+        "abapCleaner.rules.CREATE_OBJECT.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable CREATE OBJECT modernization for ABAP 7.40 or later."
+        },
+        "abapCleaner.rules.CONDENSE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable bounded CONDENSE modernization for ABAP 7.02 or later."
+        },
+        "abapCleaner.rules.DESCRIBE_TABLE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable bounded DESCRIBE TABLE LINES modernization."
+        },
+        "abapCleaner.rules.EMPTY_COMMAND.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove standalone empty commands."
+        },
+        "abapCleaner.rules.END_OF_COMMENT.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove end-of comments."
+        },
+        "abapCleaner.rules.EQUALS_SIGN_CHAIN.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Resolve equals sign chain into several commands."
+        },
+        "abapCleaner.rules.EXIT_OUTSIDE_LOOP.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Replace EXIT outside loop with RETURN."
+        },
+        "abapCleaner.rules.MOVE_TO.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Replace obsolete MOVE TO with =."
+        },
+        "abapCleaner.rules.NEEDLESS_PARENTHESES.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove needless parentheses."
+        },
+        "abapCleaner.rules.PRAGMA_POSITION.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Move pragmas to correct position."
+        },
+        "abapCleaner.rules.PSEUDO_COMMENT.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable unambiguous trailing pseudo-comment modernization for ABAP 7.02 or later."
+        },
+        "abapCleaner.rules.RAISE_TYPE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable RAISE TYPE modernization for ABAP 7.52 or later."
+        },
+        "abapCleaner.rules.TYPO.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Correct frequent typos."
+        },
+        "abapCleaner.rules.TRANSLATE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Enable bounded TRANSLATE upper/lower modernization for ABAP 7.02 or later."
+        },
+        "abapCleaner.rules.RECEIVING_KEYWORD.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Omit RECEIVING."
+        },
+        "abapCleaner.rangeFormatting.expandMode": {
+          "type": "string",
+          "enum": ["FULL_STATEMENT", "FULL_CONTROL_BLOCK", "FULL_METHOD", "FULL_CLASS", "FULL_DOCUMENT"],
+          "default": "FULL_STATEMENT",
+          "description": "Code boundary expanded by Format Selection; FULL_CONTROL_BLOCK selects the innermost IF, loop, CASE, TRY, SELECT, or PROVIDE block, and FULL_CLASS also covers interface blocks."
+        },
+        "abapCleaner.rules.COMPARISON_OPERATOR.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Use consistent set of comparison operators."
+        },
+        "abapCleaner.rules.CHAIN_OF_ONE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Simplify a chain with one element."
+        },
+        "abapCleaner.rules.CHAIN_OF_ONE.processSimpleChains": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override whether to simplify eligible one-line chains."
+        },
+        "abapCleaner.rules.DECLARATION_CHAIN.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Unchain into multiple statements."
+        },
+        "abapCleaner.rules.NOT_IS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Prefer IS NOT to NOT IS."
+        },
+        "abapCleaner.rules.ONE_COMMAND_PER_LINE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Move commands to own lines."
+        },
+        "abapCleaner.rules.LOGICAL_OPERATOR_POSITION.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Move AND/OR etc. from line end to next line start."
+        },
+        "abapCleaner.rules.SELF_REFERENCE_ME.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove the self-reference me->."
+        },
+        "abapCleaner.rules.READ_TABLE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Replace READ TABLE with table expression."
+        },
+        "abapCleaner.rules.VALUE_STATEMENT.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Shorten VALUE statements."
+        },
+        "abapCleaner.rules.COMMENT_TYPE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Comment with \" instead of * for prose."
+        },
+        "abapCleaner.rules.UPPER_AND_LOWER_CASE.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Convert upper and lower case."
+        },
+        "abapCleaner.rules.ABAP_DOC_PARAMETERS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Add missing parameters to ABAP Doc."
+        },
+        "abapCleaner.rules.CLASS_DEFINITION.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Standardize CLASS ... DEFINITION."
+        },
+        "abapCleaner.rules.IF_BLOCK_AT_METHOD_END.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Replace long IF blocks at method end."
+        },
+        "abapCleaner.rules.IF_BLOCK_AT_LOOP_END.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Replace long IF blocks at loop end."
+        },
+        "abapCleaner.rules.CAMEL_CASE_IN_CDS_TEST.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Use CamelCase in test class for CDS view."
+        },
+        "abapCleaner.rules.CDS_TEST_CLASS_LINES.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Standardize test classes for CDS views."
+        },
+        "abapCleaner.rules.EMPTY_LINES_IN_CLASS_DEFINITION.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Standardize empty lines in class definitions."
+        },
+        "abapCleaner.rules.EMPTY_LINES_IN_CLASS_DEFINITION.maxEmptyLines": {
+          "type": ["number", "null"],
+          "minimum": 1,
+          "maximum": 20,
+          "default": null,
+          "description": "Override maximum consecutive blank lines in class definitions."
+        },
+        "abapCleaner.rules.EMPTY_LINES_OUTSIDE_METHODS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Separate methods and classes with empty lines."
+        },
+        "abapCleaner.rules.EMPTY_LINES_OUTSIDE_METHODS.emptyLinesBetweenClasses": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 5,
+          "default": null,
+          "description": "Override blank lines directly between class or interface blocks."
+        },
+        "abapCleaner.rules.EMPTY_LINES_WITHIN_METHODS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Standardize empty lines within methods."
+        },
+        "abapCleaner.rules.EMPTY_LINES_WITHIN_METHODS.maxEmptyLinesWithinMethods": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 20,
+          "default": null,
+          "description": "Override the maximum consecutive blank lines within methods."
+        },
+        "abapCleaner.rules.NEEDLESS_SPACES.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Remove needless spaces."
+        },
+        "abapCleaner.rules.NEEDLESS_SPACES.processEmptyBrackets": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override whether to remove excess whitespace from empty parentheses and brackets."
+        },
+        "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.enabled": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override the active profile for Put spaces around text literals."
+        },
+        "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.separateFromKeywords": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override whether to separate text literals from keywords."
+        },
+        "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.separateFromOperators": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override whether to separate text literals from operators."
+        },
+        "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.separateFromComments": {
+          "type": ["boolean", "null"],
+          "default": null,
+          "description": "Override whether to separate text literals from comments."
+        },
+        "abapCleaner.rules.SPACE_BEFORE_PERIOD.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override the active profile for Remove space before commas and period."
+        },
+        "abapCleaner.rules.SPACE_BEFORE_PERIOD.executeOnComma": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override whether to remove spaces before chain commas."
+        },
+        "abapCleaner.rules.SPACE_BEFORE_PERIOD.executeOnPeriod": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override whether to remove spaces before statement periods."
+        },
+        "abapCleaner.rules.SPACE_AROUND_COMMENT_SIGN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override the active profile for Put spaces around comment sign."
+        },
+        "abapCleaner.rules.SPACE_AROUND_COMMENT_SIGN.spaceBeforeCommentSign": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override whether to separate code and a comment sign."
+        },
+        "abapCleaner.rules.SPACE_AROUND_COMMENT_SIGN.spaceAfterCommentSign": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override whether to start a comment with a space."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "npm run build --workspace @abap-cleaner/core && esbuild src/extension.ts --bundle --platform=node --target=node20 --format=cjs --external:vscode --outfile=dist/extension.js",
+    "typecheck": "npm run build --workspace @abap-cleaner/core && tsc --noEmit -p tsconfig.json",
+    "test": "npm run typecheck",
+    "package": "npm run build && vsce package --no-dependencies --skip-license --allow-missing-repository --out abap-cleaner-vscode-dev.vsix"
+  },
+  "devDependencies": {
+    "@types/vscode": "1.109.0",
+    "@vscode/vsce": "3.9.2",
+    "@abap-cleaner/core": "0.1.0",
+    "esbuild": "0.25.0"
+  }
+}

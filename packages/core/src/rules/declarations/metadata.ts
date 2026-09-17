@@ -1,0 +1,78 @@
+import type { RuleMetadata } from '../../api.js';
+
+export const DECLARATION_RULES: readonly RuleMetadata[] = [
+  {
+    id: 'CLASS_DEFINITION',
+    displayName: 'Standardize CLASS ... DEFINITION',
+    description: 'Currently orders PUBLIC before FINAL in a simple one-line comment-free class definition.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    settings: [],
+  },
+  {
+    id: 'ABAP_DOC_PARAMETERS',
+    displayName: 'Add missing parameters to ABAP Doc',
+    description: 'Currently adds one parameter entry to a non-synchronized single-line ABAP Doc header above a simple METHODS IMPORTING declaration.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    settings: [],
+  },
+  {
+    id: 'ESCAPE_CHAR_FOR_PARAMS',
+    displayName: 'Standardize escaping of !parameters',
+    description: 'Currently adds or removes ! for one critical or noncritical parameter in a simple one-line METHODS IMPORTING declaration.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    settings: [],
+  },
+  {
+    id: 'NEEDLESS_CLEAR',
+    displayName: 'Remove needless CLEAR',
+    description: 'Currently removes an uncommented CLEAR immediately following a declared scalar local variable.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: true,
+    settings: [],
+  },
+  {
+    id: 'IMPLICIT_TYPE',
+    displayName: 'Make implicit type explicit',
+    description: 'Currently expands standalone uncommented untyped and name(length) DATA and TYPES declarations.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: true,
+    settings: [],
+  },
+  {
+    id: 'EMPTY_SECTIONS',
+    displayName: 'Remove empty class definition SECTIONs',
+    description: 'Currently removes empty uncommented visibility SECTIONs from final local class definitions.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    settings: [],
+  },
+  {
+    id: 'ABAP_DOC_LANG',
+    displayName: 'Remove lang="en" from ABAP Doc',
+    description: 'Removes the English language attribute from synchronized ABAP Doc shorttexts.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: true,
+    settings: [],
+  },
+  {
+    id: 'CHAIN_OF_ONE',
+    displayName: 'Simplify a chain with one element',
+    description: 'Currently removes the colon from simple single-line chains with one element.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: true,
+    settings: [
+      { name: 'processSimpleChains', description: 'Simplify eligible one-line chains.', type: 'boolean', defaultValue: true },
+    ],
+  },
+  {
+    id: 'DECLARATION_CHAIN',
+    displayName: 'Unchain into multiple statements',
+    description: 'Currently unchains two-item, one-line comment-free DATA and TYPES declarations with simple TYPE names.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    settings: [],
+  },
+];

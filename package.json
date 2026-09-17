@@ -1,0 +1,19 @@
+{
+  "name": "abap-cleaner-vscode-port",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces",
+    "verify:core-isolation": "node tools/verify-core-isolation.mjs",
+    "verify:settings-schema": "npm run build --workspace @abap-cleaner/core && node tools/verify-settings-schema.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.19",
+    "typescript": "7.0.2"
+  }
+}

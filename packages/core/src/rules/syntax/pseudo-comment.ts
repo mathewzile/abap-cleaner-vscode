@@ -1,0 +1,80 @@
+const PSEUDO_COMMENT_PRAGMAS: Readonly<Record<string, string>> = {
+  ARGCHECKED: '##ARG_OK',
+  ASSIGN_LEN: '##ASSIGN_LEN',
+  ASSIGN_OK: '##ASSIGN_OK',
+  BOOL_OK: '##BOOL_OK',
+  CALLED: '##CALLED',
+  CATCH_ALL: '##CATCH_ALL',
+  CHAIN_OK: '##CHAIN_OK',
+  CLAS_FINAL: '##CLASS_FINAL',
+  CONST_WRT: '##CONST_WRITE',
+  CURS_LOST: '##CURSOR_LOST',
+  DATFM: '##DATE_FORMAT',
+  DECL_EVENT: '##DECL_EVENT',
+  DECL_MODUL: '##DECL_MODUL',
+  DO_OK: '##DO_OK',
+  DUPL_EVENT: '##DUPL_EVENT',
+  DUPL_OK: '##DUPLICATE_OK',
+  ENHOK: '##ENH_OK',
+  EXCEPT_OK: '##EXCEPT_OK',
+  EXCEPT_TRY: '##EXCEPT_TRY',
+  EXISTS: '##EXISTS',
+  F_INPUT_OK: '##FORMAT_INPUT_OK',
+  FD_ASSGN: '##FS_ASSIGN_OK',
+  FREE_MEM: '##FREE_MEMORY_OK',
+  FS_UNTYPED: '##FS_UNTYPED',
+  GEN_OK: '##GEN_OK',
+  INCL_OK: '##INCL_OK',
+  INTO_OK: '##INTO_OK',
+  LOAD_W_INV: '##LOAD_STMNT_OK',
+  LOOP_ASSIG: '##LOOP_ASSIGN',
+  LOOP_INDEX: '##LOOP_INDEX',
+  LOOP_TO_WR: '##LOOP_TO_OK',
+  NEEDED: '##NEEDED',
+  NO_HANDLER: '##NO_HANDLER',
+  NO_INCOMP: '##COMPATIBLE',
+  NOBREAK: '##NO_BREAK',
+  NOTEXT: '##NO_TEXT',
+  NUMBER_OK: '##NUMBER_OK',
+  PART_OK: '##PART_OK',
+  PREFIX_OK: '##PREFIX_OK',
+  RAISE_OK: '##RAISE_OK',
+  RC_READ: '##SUBRC_READ',
+  SAPRL_OK: '##SAPRL_OK',
+  SEC_PROTEC: '##SECTION_OK',
+  SHAREOK: '##SHARE_OK',
+  STAT_PROG: '##STAT_PROG',
+  STAT_UNDEF: '##STAT_UNDEF',
+  STMNT_EXIT: '##STMNT_EXIT',
+  STRING_OK: '##STRING_OK',
+  SUBRC_OK: '##SUBRC_OK',
+  TEXT_CHAR: '##TEXT_CHAR',
+  TEXT_DIFF: '##TEXT_DIFF',
+  TEXT_DUP: '##TEXT_DUP',
+  TEXT_POOL: '##TEXT_POOL',
+  TEXT_UNIQ: '##TEXT_UNIQ',
+  TEXT_USE: '##TEXT_USE',
+  TIME_ARITH: '##TIME_ARITH',
+  TIME_ASSIG: '##TIME_ASSIGN',
+  TIME_COMP: '##TIME_COMP',
+  TITL_UNDEF: '##TITL_UNDEF',
+  TYPES_MISS: '##TYPE_CHAIN_OK',
+  VALUE_OK: '##VALUE_OK',
+  WARNOK: '##WARN_OK',
+  WHEN_DOUBL: '##WHEN_DOUBLE_OK',
+  WRITE_MOVE: '##WRITE_MOVE',
+  WRITE_OK: '##WRITE_OK',
+};
+
+export function replaceSimplePseudoComments(sourceText: string): string {
+  return sourceText.split(/(\r?\n)/).map((segment) => replaceTrailingPseudoComment(segment)).join('');
+}
+
+function replaceTrailingPseudoComment(line: string): string {
+  const match = /^(.*?)(\s*)\.\s*"#EC\s+([A-Za-z0-9_]+)\s*$/i.exec(line);
+  if (match === null) return line;
+  const beforePeriod = match[1] ?? '';
+  const spacing = match[2] ?? '';
+  const pragma = PSEUDO_COMMENT_PRAGMAS[(match[3] ?? '').toUpperCase()];
+  return pragma === undefined ? line : `${beforePeriod}${spacing} ${pragma}.`;
+}

@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# TypeScript and extension build output
+packages/*/dist/
+packages/vscode-extension/*.vsix
+*.tsbuildinfo
+
+# Local VS Code and OS files
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Local-only upstream behavioral reference; do not publish or modify
+reference-eclipse-plugin/

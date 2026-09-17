@@ -1,0 +1,13 @@
+{
+  "name": "@abap-cleaner/core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "files": ["dist", "resources"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "npm run build && node --test dist/test/*.test.js"
+  }
+}
