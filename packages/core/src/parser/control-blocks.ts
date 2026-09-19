@@ -59,7 +59,7 @@ function controlBlockBoundary(command: Command): { readonly kind: ControlBlockKi
   }
 }
 
-function isNonLoopSelect(command: Command): boolean {
+export function isNonLoopSelect(command: Command): boolean {
   const words = command.tokens.filter((token) => token.kind === 'word').map((token) => token.text.toUpperCase());
   return words.includes('SINGLE')
     || words.some((word, index) => (word === 'INTO' || word === 'APPENDING') && words.slice(index + 1).includes('TABLE'));

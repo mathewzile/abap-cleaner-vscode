@@ -10,10 +10,16 @@
     "typecheck": "npm run typecheck --workspaces",
     "test": "npm run test --workspaces",
     "verify:core-isolation": "node tools/verify-core-isolation.mjs",
-    "verify:settings-schema": "npm run build --workspace @abap-cleaner/core && node tools/verify-settings-schema.mjs"
+    "verify:settings-schema": "npm run build --workspace @abap-cleaner/core && node tools/verify-settings-schema.mjs",
+    "gen:settings-schema": "npm run build --workspace @abap-cleaner/core && node tools/gen-settings-schema.mjs"
   },
   "devDependencies": {
     "@types/node": "22.19.19",
     "typescript": "7.0.2"
+  },
+  "allowScripts": {
+    "@vscode/vsce-sign@2.1.0": true,
+    "esbuild@0.25.0": true,
+    "keytar@7.9.0": true
   }
 }

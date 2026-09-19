@@ -7,6 +7,8 @@ export const EMPTY_LINE_RULES: readonly RuleMetadata[] = [
     description: 'Currently removes exact generated ABAP Doc instructions and TODO comments before simple populated VALUE constructors in annotated local CDS test classes.',
     groupId: 'EMPTY_LINES',
     defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'CdsTestClassLinesRule',
     settings: [],
   },
   {
@@ -15,6 +17,8 @@ export const EMPTY_LINE_RULES: readonly RuleMetadata[] = [
     description: 'Currently limits consecutive blank lines inside non-deferred class definitions.',
     groupId: 'EMPTY_LINES',
     defaultEnabled: true,
+    essentialEnabled: false,
+    docId: 'EmptyLinesInClassDefinitionRule',
     settings: [
       { name: 'maxEmptyLines', description: 'Maximum consecutive blank lines in class definitions.', type: 'integer', defaultValue: 1, minimum: 1, maximum: 20 },
     ],
@@ -25,6 +29,8 @@ export const EMPTY_LINE_RULES: readonly RuleMetadata[] = [
     description: 'Currently standardizes blank lines directly between class and interface blocks.',
     groupId: 'EMPTY_LINES',
     defaultEnabled: true,
+    essentialEnabled: true,
+    docId: 'EmptyLinesOutsideMethodsRule',
     settings: [
       { name: 'emptyLinesBetweenClasses', description: 'Blank lines between classes or interfaces.', type: 'integer', defaultValue: 2, minimum: 0, maximum: 5 },
     ],
@@ -35,6 +41,8 @@ export const EMPTY_LINE_RULES: readonly RuleMetadata[] = [
     description: 'Limits consecutive blank lines inside METHOD and ENDMETHOD blocks.',
     groupId: 'EMPTY_LINES',
     defaultEnabled: true,
+    essentialEnabled: true,
+    docId: 'EmptyLinesWithinMethodsRule',
     settings: [
       { name: 'maxEmptyLinesWithinMethods', description: 'Maximum consecutive blank lines within methods.', type: 'integer', defaultValue: 1, minimum: 0, maximum: 20 },
     ],
@@ -45,6 +53,8 @@ export const EMPTY_LINE_RULES: readonly RuleMetadata[] = [
     description: 'Currently splits consecutive simple, uncommented same-line commands while retaining the existing indent.',
     groupId: 'EMPTY_LINES',
     defaultEnabled: false,
+    essentialEnabled: true,
+    docId: 'OneCommandPerLineRule',
     settings: [],
   },
 ];

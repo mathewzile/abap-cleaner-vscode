@@ -12,6 +12,10 @@ import { addSimpleMissingAbapDocParameters } from './rules/declarations/abap-doc
 import { simplifyChainOfOne } from './rules/declarations/chain-of-one.js';
 import { normalizeSimpleClassDefinitionOptions } from './rules/declarations/class-definition.js';
 import { unchainSimpleDeclarations } from './rules/declarations/declaration-chain.js';
+import { removeUnusedDeclaredVariables } from './rules/declarations/unused-variables.js';
+import { moveLocalConstantsToMethodStart } from './rules/declarations/local-declaration-order.js';
+import { reportUnusedImportingParameters } from './rules/declarations/unused-parameters.js';
+import { useFinalForImmutableInlineDeclarations } from './rules/declarations/final-variable.js';
 import { removeEmptyProtectedSectionsFromFinalLocalClasses } from './rules/declarations/empty-sections.js';
 import { makeSimpleImplicitTypesExplicit } from './rules/declarations/implicit-type.js';
 import { removeInitialScalarClears } from './rules/declarations/needless-clear.js';
@@ -66,11 +70,48 @@ import { removeDirectMethodSelfReferences } from './rules/syntax/self-reference-
 import { replaceSimpleStringConcatenations } from './rules/syntax/string-template.js';
 import { replaceDeclaredCondense } from './rules/syntax/condense.js';
 import { shortenSimpleValueStatements } from './rules/syntax/value-statement.js';
+import { alignAssignmentsToSameStructure } from './rules/syntax/align-assignments.js';
+import { alignAbapDoc } from './rules/syntax/align-abap-doc.js';
+import { alignAliasesFor } from './rules/syntax/align-aliases-for.js';
+import { alignDeclarations } from './rules/syntax/align-declarations.js';
+import { alignLogicalExpressions } from './rules/syntax/align-logical-expressions.js';
+import { alignSelectClauses } from './rules/syntax/align-select-clauses.js';
+import { alignSelectLists } from './rules/syntax/align-select-lists.js';
+import { alignWithSecondWord } from './rules/syntax/align-with-second-word.js';
+import { alignCondExpressions } from './rules/syntax/align-cond-expressions.js';
+import { alignMethodsForTesting } from './rules/syntax/align-methods-for-testing.js';
+import { alignMethodsRedefinition } from './rules/syntax/align-methods-redefinition.js';
+import { alignClearFreeChains } from './rules/syntax/align-clear-free.js';
+import { normalizeIndentation } from './rules/syntax/inset.js';
+import { DDL_RULES } from './rules/ddl/metadata.js';
+import { normalizeDdlEmptyLines } from './rules/ddl/empty-lines.js';
+import { normalizeDdlSpacesAroundSigns } from './rules/ddl/spaces-around-signs.js';
+import { normalizeDdlSpacesAroundBrackets } from './rules/ddl/spaces-around-brackets.js';
+import { normalizeDdlPositionBraces } from './rules/ddl/position-braces.js';
+import { normalizeDdlPositionClauses } from './rules/ddl/position-clauses.js';
+import { normalizeDdlPositionSelect } from './rules/ddl/position-select.js';
+import { normalizeDdlPositionDefine } from './rules/ddl/position-define.js';
+import { alignDdlEntityParameters } from './rules/ddl/align-entity-parameters.js';
+import { alignDdlSourceParameters } from './rules/ddl/align-source-parameters.js';
+import { alignDdlLogicalExpressions } from './rules/ddl/align-logical-expressions.js';
+import { alignDdlFunctionParameters } from './rules/ddl/align-function-parameters.js';
+import { alignDdlFieldLists } from './rules/ddl/align-field-lists.js';
+import { alignDdlDataSources } from './rules/ddl/align-data-sources.js';
+import { alignDdlSelectList } from './rules/ddl/align-select-list.js';
+import { nestDdlAnnotations } from './rules/ddl/annotation-nesting.js';
+import { normalizeDdlEmptyLinesBetween } from './rules/ddl/empty-lines-between.js';
+import { normalizeDdlAnnotationLayout } from './rules/ddl/annotation-layout.js';
+import { normalizeDdlPositionJoin, normalizeDdlPositionAssociation } from './rules/ddl/position-join-association.js';
+import { correctDdlCommentTypos } from './rules/ddl/typo.js';
 
 export class TypeScriptCleanupEngine implements CleanupEngine {
   clean(request: CleanupRequest): CleanupResponse {
     const startedAt = Date.now();
-    if ((request.language ?? previewLanguage(request.sourceText)) !== 'ABAP') {
+    const language = request.language ?? previewLanguage(request.sourceText);
+    if (language === 'DDL' || language === 'DCL') {
+      return this.cleanDdl(request, startedAt);
+    }
+    if (language !== 'ABAP') {
       return createResponse(request.sourceText, [], startedAt);
     }
 
@@ -79,7 +120,11 @@ export class TypeScriptCleanupEngine implements CleanupEngine {
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ABAP_DOC_LANG', removeEnglishLangFromAbapDoc);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ABAP_DOC_PARAMETERS', addSimpleMissingAbapDocParameters);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'IMPLICIT_TYPE', makeSimpleImplicitTypesExplicit);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'FINAL_VARIABLE', useFinalForImmutableInlineDeclarations);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'NEEDLESS_CLEAR', removeInitialScalarClears);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'UNUSED_VARIABLES', removeUnusedDeclaredVariables);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'LOCAL_DECLARATION_ORDER', moveLocalConstantsToMethodStart);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'UNUSED_PARAMETERS', reportUnusedImportingParameters);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ESCAPE_CHAR_FOR_PARAMS', removeSimpleParameterEscapeCharacters);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'CLASS_DEFINITION', normalizeSimpleClassDefinitionOptions);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'EMPTY_SECTIONS', removeEmptyProtectedSectionsFromFinalLocalClasses);
@@ -170,6 +215,54 @@ export class TypeScriptCleanupEngine implements CleanupEngine {
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'SELF_REFERENCE_ME', removeDirectMethodSelfReferences);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'VALUE_STATEMENT', shortenSimpleValueStatements);
     cleanedCode = applyRule(request, cleanedCode, appliedRules, 'UPPER_AND_LOWER_CASE', uppercaseStandaloneStatementKeywords);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_ABAP_DOC', alignAbapDoc);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_ASSIGNMENTS', alignAssignmentsToSameStructure);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_ALIASES_FOR', alignAliasesFor);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_DECLARATIONS', alignDeclarations);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_LOGICAL_EXPRESSIONS', alignLogicalExpressions);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_SELECT_CLAUSES', alignSelectClauses);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_SELECT_LISTS', alignSelectLists);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_WITH_SECOND_WORD', alignWithSecondWord);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_COND_EXPRESSIONS', alignCondExpressions);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_METHODS_FOR_TESTING', alignMethodsForTesting);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_METHODS_REDEFINITION', alignMethodsRedefinition);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'ALIGN_CLEAR_FREE_AND_SORT', alignClearFreeChains);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'INSET', normalizeIndentation);
+
+    return {
+      cleanedCode,
+      appliedRules,
+      stats: {
+        changedLineCount: countChangedLines(request.sourceText, cleanedCode),
+        appliedRuleCount: appliedRules.length,
+        processingTimeMs: Date.now() - startedAt,
+      },
+    };
+  }
+
+  private cleanDdl(request: CleanupRequest, startedAt: number): CleanupResponse {
+    let cleanedCode = request.sourceText;
+    const appliedRules: AppliedRule[] = [];
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_EMPTY_LINES_WITHIN', normalizeDdlEmptyLines);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ANNO_LAYOUT', normalizeDdlAnnotationLayout);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ANNO_NESTING', nestDdlAnnotations);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_SPACES_AROUND_SIGNS', normalizeDdlSpacesAroundSigns);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_SPACES_AROUND_BRACKETS', normalizeDdlSpacesAroundBrackets);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_POSITION_BRACES', normalizeDdlPositionBraces);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_POSITION_CLAUSES', normalizeDdlPositionClauses);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_POSITION_SELECT', normalizeDdlPositionSelect);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_POSITION_JOIN', normalizeDdlPositionJoin);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_POSITION_ASSOCIATION', normalizeDdlPositionAssociation);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_POSITION_DEFINE', normalizeDdlPositionDefine);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_ENTITY_PARAMETERS', alignDdlEntityParameters);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_SOURCE_PARAMETERS', alignDdlSourceParameters);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_LOGICAL_EXPRESSIONS', alignDdlLogicalExpressions);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_FUNCTION_PARAMETERS', alignDdlFunctionParameters);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_FIELD_LISTS', alignDdlFieldLists);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_DATA_SOURCES', alignDdlDataSources);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_ALIGN_SELECT_LIST', alignDdlSelectList);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_EMPTY_LINES_BETWEEN', normalizeDdlEmptyLinesBetween);
+    cleanedCode = applyRule(request, cleanedCode, appliedRules, 'DDL_TYPO', correctDdlCommentTypos);
 
     return {
       cleanedCode,
@@ -183,7 +276,7 @@ export class TypeScriptCleanupEngine implements CleanupEngine {
   }
 
   listRules(): readonly RuleMetadata[] {
-    return [...EMPTY_LINE_RULES, ...SPACE_RULES, ...DECLARATION_RULES, ...SYNTAX_RULES];
+    return [...EMPTY_LINE_RULES, ...SPACE_RULES, ...DECLARATION_RULES, ...SYNTAX_RULES, ...DDL_RULES];
   }
 }
 
@@ -208,7 +301,7 @@ function applyRule(
 }
 
 function ruleMetadata(ruleId: string): RuleMetadata | undefined {
-  return [...EMPTY_LINE_RULES, ...SPACE_RULES, ...DECLARATION_RULES, ...SYNTAX_RULES].find((rule) => rule.id === ruleId);
+  return [...EMPTY_LINE_RULES, ...SPACE_RULES, ...DECLARATION_RULES, ...SYNTAX_RULES, ...DDL_RULES].find((rule) => rule.id === ruleId);
 }
 
 function meetsMinimumRelease(abapRelease: string | undefined, minimumRelease: number | undefined): boolean {
@@ -233,7 +326,7 @@ function integerSetting(request: CleanupRequest, ruleId: string, settingName: st
 }
 
 function ruleDisplayName(ruleId: string): string {
-  return [...EMPTY_LINE_RULES, ...SPACE_RULES, ...DECLARATION_RULES, ...SYNTAX_RULES].find((rule) => rule.id === ruleId)?.displayName ?? ruleId;
+  return [...EMPTY_LINE_RULES, ...SPACE_RULES, ...DECLARATION_RULES, ...SYNTAX_RULES, ...DDL_RULES].find((rule) => rule.id === ruleId)?.displayName ?? ruleId;
 }
 
 function createResponse(sourceText: string, appliedRules: readonly AppliedRule[], startedAt: number): CleanupResponse {

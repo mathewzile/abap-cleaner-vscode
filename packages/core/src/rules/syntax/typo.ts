@@ -1,6 +1,6 @@
 import { tokenize } from '../../parser/tokenizer.js';
 
-const TYPO_CORRECTIONS: Readonly<Record<string, string>> = {
+export const TYPO_CORRECTIONS: Readonly<Record<string, string>> = {
   additinal: 'additional',
   additonal: 'additional',
   allready: 'already',
@@ -18,6 +18,10 @@ export function correctUnambiguousCommentTypos(sourceText: string): string {
 }
 
 function correctComment(text: string): string {
+  return correctTypoWords(text);
+}
+
+export function correctTypoWords(text: string): string {
   return text.replace(/[A-Za-z]+/g, (word) => {
     const correction = TYPO_CORRECTIONS[word.toLowerCase()];
     return correction === undefined ? word : matchCase(word, correction);

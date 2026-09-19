@@ -66,32 +66,47 @@ Two shapes, both generated:
 untouched `settings.json` behaves exactly like the chosen profile. Same for each rule setting.
 This three-state default is essential — a plain `false` default would silently disable every rule.
 
+## Profile resolution is data-driven
+
+`packages/vscode-extension/src/extension.ts` used to duplicate `engine.listRules()` as a hardcoded
+`RULE_IDS` array plus a hand-maintained boolean expression encoding default/essential profile
+membership per rule — a second source of truth that had already drifted from both the core rule
+metadata (a newly ported rule could silently be unreachable via `abapCleaner.rules.<ID>.enabled`
+until someone remembered to add it there too) and from upstream's actual `Rule.isEssential()`
+overrides (several rules the Java essential profile activates, e.g. `COMMENT_TYPE` or
+`CREATE_OBJECT`, were missing from the hand-written list, and the DDL rules were wrongly included).
+`RuleMetadata.essentialEnabled` (ported from `Rule.isEssential()`) plus
+`packages/core/src/profile-resolution.ts`'s `isRuleActiveInProfile()` now give a single,
+core-owned, unit-tested source of truth; `extension.ts` iterates `engine.listRules()` directly for
+`RULE_IDS`, per-rule setting names, and default/essential enablement instead of maintaining a
+parallel list.
+
 ## Schema generation
 
-100 rules with an average of 3–4 settings is ~350 configuration entries. These are **generated**,
-never hand-written.
-
-`tools/gen-settings-schema.ts` calls `engine.listRules()` and writes
-`contributes.configuration` into `packages/vscode-extension/package.json`. The metadata comes from
-what `Rule.java` and `ConfigValue.java` already expose:
+These are **generated**, never hand-written: `tools/gen-settings-schema.mjs` calls
+`engine.listRules()` and writes every `abapCleaner.rules.<ID>*` entry into
+`packages/vscode-extension/package.json`'s `contributes.configuration.properties`, leaving the
+non-rule settings (`abapCleaner.profile`, `lint.*`, `trace`, etc.) untouched. The mapping (shared
+with the verifier via `tools/settings-schema.mjs`, so the two can never disagree with each other):
 
 | Source | Target |
-|---|---|
-| `RuleID.name()` | Setting key segment |
-| `Rule.getDisplayName()` | `markdownDescription` heading |
-| `Rule.getDescription()` | `markdownDescription` body |
-| `Rule.getGroupID()` | `order` / grouping in the settings UI |
-| `Rule.isActiveByDefault()` | Documented as the profile default |
-| `ConfigValue.settingName` | Setting key segment |
-| `ConfigValue.description` | `description` |
-| `ConfigValue.unit` | Appended to `description` |
-| `ConfigIntValue` min/max | `minimum` / `maximum` |
-| `ConfigEnumValue` / `ConfigSelectionValue` | `enum` + `enumDescriptions` |
-| `ConfigInfoValue` | **Skipped** — UI-only label, not a setting |
-| `Rule.getRequiredAbapRelease()` | Appended to `markdownDescription` |
+| --- | --- |
+| `RuleMetadata.id` | Setting key segment |
+| `RuleMetadata.displayName` | `markdownDescription` heading |
+| `RuleMetadata.description` | `markdownDescription` body |
+| `RuleMetadata.minimumAbapRelease` | Appended to `markdownDescription` |
+| `RuleSettingMetadata.name` | Setting key segment |
+| `RuleSettingMetadata.description` | `description` |
+| `RuleSettingMetadata.minimum`/`maximum` | `minimum`/`maximum` (integer settings) |
+| `RuleSettingMetadata.options` | `enum` (enum/selection settings) |
 
-CI fails if the committed `package.json` differs from freshly generated output, so schema drift
-cannot be merged.
+Not implemented, since no currently-ported rule's metadata exercises it: `RuleMetadata.groupId` as
+an `order`/grouping hint in the settings UI, a `unit` appended to a setting's `description`, and
+`enumDescriptions` for enum/selection settings.
+
+`npm run gen:settings-schema` regenerates the file; `npm run verify:settings-schema` (run in CI, see
+`tools/verify-settings-schema.mjs`) fails if the committed file differs from what the generator
+would produce right now, so schema drift cannot be merged.
 
 ## Team profiles
 

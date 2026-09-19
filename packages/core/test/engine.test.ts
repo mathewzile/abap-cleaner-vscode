@@ -74,8 +74,8 @@ test('command-per-line cleanup requires an explicit profile override', () => {
   });
 
   assert.equal(defaultResponse.cleanedCode, sourceText);
-  assert.equal(enabledResponse.cleanedCode, '  DATA lv_first TYPE i.\n  DATA lv_second TYPE i.');
-  assert.deepEqual(enabledResponse.appliedRules.map((rule) => rule.ruleId), ['ONE_COMMAND_PER_LINE']);
+  assert.equal(enabledResponse.cleanedCode, '  DATA lv_first  TYPE i.\n  DATA lv_second TYPE i.');
+  assert.deepEqual(enabledResponse.appliedRules.map((rule) => rule.ruleId), ['ONE_COMMAND_PER_LINE', 'ALIGN_DECLARATIONS']);
 });
 
 test('the engine applies bounded CALL METHOD modernization', () => {
@@ -196,8 +196,8 @@ test('declaration chain cleanup requires an explicit profile override', () => {
   });
 
   assert.equal(defaultResponse.cleanedCode, sourceText);
-  assert.equal(enabledResponse.cleanedCode, 'DATA lv_count TYPE i.\nDATA lv_text TYPE string.');
-  assert.deepEqual(enabledResponse.appliedRules.map((rule) => rule.ruleId), ['DECLARATION_CHAIN']);
+  assert.equal(enabledResponse.cleanedCode, 'DATA lv_count TYPE i.\nDATA lv_text  TYPE string.');
+  assert.deepEqual(enabledResponse.appliedRules.map((rule) => rule.ruleId), ['DECLARATION_CHAIN', 'ALIGN_DECLARATIONS']);
 });
 
 test('empty protected section cleanup requires an explicit profile override', () => {
@@ -768,7 +768,7 @@ test('the profile can disable a rule independently', () => {
   });
 
   assert.equal(response.cleanedCode, 'CLEAR value .');
-  assert.equal(engine.listRules().length, 56);
+  assert.equal(engine.listRules().length, 93);
 });
 
 test('the profile can disable CALL METHOD modernization independently', () => {

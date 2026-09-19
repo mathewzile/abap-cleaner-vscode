@@ -2,11 +2,23 @@ import type { RuleMetadata } from '../../api.js';
 
 export const DECLARATION_RULES: readonly RuleMetadata[] = [
   {
+    id: 'LOCAL_DECLARATION_ORDER',
+    displayName: 'Reorder local declarations',
+    description: 'Currently only relocates a simple, non-chained, comment-free CONSTANTS name TYPE simple-type VALUE literal. declaration found anywhere in a method/form/function body to immediately after the last already-correctly-positioned leading CONSTANTS declaration, preserving relative order; TYPES/STATICS/DATA/FIELD-SYMBOLS grouping and reordering by first use are not yet handled. Refuses the whole body if it contains a BEGIN OF structured declaration or a dynamic ASSIGN.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'LocalDeclarationOrderRule',
+    settings: [],
+  },
+  {
     id: 'CLASS_DEFINITION',
     displayName: 'Standardize CLASS ... DEFINITION',
     description: 'Currently orders PUBLIC before FINAL in a simple one-line comment-free class definition.',
     groupId: 'DECLARATIONS',
     defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'ClassDefinitionRule',
     settings: [],
   },
   {
@@ -15,6 +27,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently adds one parameter entry to a non-synchronized single-line ABAP Doc header above a simple METHODS IMPORTING declaration.',
     groupId: 'DECLARATIONS',
     defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'AbapDocParametersRule',
     settings: [],
   },
   {
@@ -23,6 +37,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently adds or removes ! for one critical or noncritical parameter in a simple one-line METHODS IMPORTING declaration.',
     groupId: 'DECLARATIONS',
     defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'EscapeCharForParametersRule',
     settings: [],
   },
   {
@@ -31,6 +47,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently removes an uncommented CLEAR immediately following a declared scalar local variable.',
     groupId: 'DECLARATIONS',
     defaultEnabled: true,
+    essentialEnabled: false,
+    docId: 'NeedlessClearRule',
     settings: [],
   },
   {
@@ -39,6 +57,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently expands standalone uncommented untyped and name(length) DATA and TYPES declarations.',
     groupId: 'DECLARATIONS',
     defaultEnabled: true,
+    essentialEnabled: true,
+    docId: 'ImplicitTypeRule',
     settings: [],
   },
   {
@@ -47,6 +67,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently removes empty uncommented visibility SECTIONs from final local class definitions.',
     groupId: 'DECLARATIONS',
     defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'EmptySectionsInClassDefRule',
     settings: [],
   },
   {
@@ -55,6 +77,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Removes the English language attribute from synchronized ABAP Doc shorttexts.',
     groupId: 'DECLARATIONS',
     defaultEnabled: true,
+    essentialEnabled: false,
+    docId: 'AbapDocLangRule',
     settings: [],
   },
   {
@@ -63,6 +87,8 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently removes the colon from simple single-line chains with one element.',
     groupId: 'DECLARATIONS',
     defaultEnabled: true,
+    essentialEnabled: false,
+    docId: 'ChainOfOneRule',
     settings: [
       { name: 'processSimpleChains', description: 'Simplify eligible one-line chains.', type: 'boolean', defaultValue: true },
     ],
@@ -73,6 +99,39 @@ export const DECLARATION_RULES: readonly RuleMetadata[] = [
     description: 'Currently unchains two-item, one-line comment-free DATA and TYPES declarations with simple TYPE names.',
     groupId: 'DECLARATIONS',
     defaultEnabled: false,
+    essentialEnabled: true,
+    docId: 'ChainRule',
+    settings: [],
+  },
+  {
+    id: 'UNUSED_PARAMETERS',
+    displayName: 'Report unused parameters',
+    description: 'Currently adds a TODO comment for an IMPORTING parameter never referenced (by word-token text, including in comments) in the body of a non-chained METHODS declaration with only simple parameter type clauses, skipping methods with no executable statement in their body and parameters marked ##NEEDED; EXPORTING, CHANGING, and RETURNING parameters, and removing stale TODO comments, are not yet handled.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: true,
+    essentialEnabled: false,
+    docId: 'UnusedParametersRule',
+    settings: [],
+  },
+  {
+    id: 'UNUSED_VARIABLES',
+    displayName: 'Delete unused variables',
+    description: 'Currently deletes a standalone declared scalar variable only when its name never occurs again anywhere in its method, including in comments.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'UnusedVariablesRule',
+    settings: [],
+  },
+  {
+    id: 'FINAL_VARIABLE',
+    displayName: 'Use FINAL for immutable variables',
+    description: 'Currently replaces DATA( ) with FINAL( ) for a plain-assignment inline declaration that is read again but never reassigned, skipping methods that mention ASSIGNING, REF, FIELD-SYMBOL, or ASSIGN.',
+    groupId: 'DECLARATIONS',
+    defaultEnabled: false,
+    essentialEnabled: false,
+    docId: 'FinalVariableRule',
+    minimumAbapRelease: 757,
     settings: [],
   },
 ];

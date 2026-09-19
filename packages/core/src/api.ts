@@ -67,6 +67,9 @@ export interface RuleMetadata {
   readonly description: string;
   readonly groupId: string;
   readonly defaultEnabled: boolean;
+  readonly essentialEnabled: boolean;
+  /** Upstream Java rule class name, e.g. `SelfReferenceMeRule`, used to link to its docs page at `docs/rules/<docId>.md` in the reference repository. */
+  readonly docId: string;
   readonly minimumAbapRelease?: number;
   readonly settings: readonly RuleSettingMetadata[];
 }

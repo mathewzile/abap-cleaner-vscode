@@ -1,0 +1,31 @@
+abap-cleaner-vscode-port
+
+This repository is a TypeScript re-implementation ("port") of a subset of the
+cleanup rules and VS Code integration behavior of ABAP cleaner, an
+Eclipse/Java plugin originally developed by SAP:
+
+    https://github.com/SAP/abap-cleaner
+
+ABAP cleaner is licensed under the Apache License, Version 2.0. Its original
+copyright notice is reproduced here as required by Section 4(d) of that
+License:
+
+    Copyright 2023 SAP SE or an SAP affiliate company and ABAP cleaner
+    contributors
+
+No code from the original Java/Eclipse plugin is compiled, executed, or
+distributed by this repository; the upstream source (vendored locally as a
+read-only, git-ignored behavioral reference under `reference-eclipse-plugin/`
+during development) is used only to determine the intended behavior of each
+ported rule. Every ported TypeScript file carries its own header comment
+naming the upstream Java file and version it was ported from (see
+`spec/03-engine-port.md`), and implements only a narrowly-scoped,
+independently-tested subset of that file's behavior — see each rule's header
+comment and `spec/08-roadmap.md` for the exact scope and what remains
+unported.
+
+This repository's own contributions are likewise licensed under the Apache
+License, Version 2.0 (see `LICENSE`).
+
+"ABAP" and "SAP" are trademarks or registered trademarks of SAP SE. This
+project is not affiliated with, endorsed by, or sponsored by SAP SE.

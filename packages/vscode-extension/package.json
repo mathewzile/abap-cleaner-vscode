@@ -22,6 +22,32 @@
     "Linters"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "abapCleaner.cleanWorkspace",
+        "title": "ABAP Cleaner: Clean Workspace"
+      },
+      {
+        "command": "abapCleaner.disableRule",
+        "title": "ABAP Cleaner: Disable Rule for This Workspace"
+      },
+      {
+        "command": "abapCleaner.formatDocument",
+        "title": "ABAP Cleaner: Format Document"
+      },
+      {
+        "command": "abapCleaner.formatSelection",
+        "title": "ABAP Cleaner: Format Selection"
+      },
+      {
+        "command": "abapCleaner.exportProfile",
+        "title": "ABAP Cleaner: Export Resolved Profile…"
+      },
+      {
+        "command": "abapCleaner.showOutput",
+        "title": "ABAP Cleaner: Show Log"
+      }
+    ],
     "configuration": {
       "title": "ABAP Cleaner",
       "properties": {
@@ -35,8 +61,23 @@
           "description": "Base cleanup profile."
         },
         "abapCleaner.abapRelease": {
-          "type": ["string", "null"],
-          "enum": [null, "740", "750", "751", "752", "753", "754", "755", "756", "757", "758"],
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "740",
+            "750",
+            "751",
+            "752",
+            "753",
+            "754",
+            "755",
+            "756",
+            "757",
+            "758"
+          ],
           "default": null,
           "description": "Optional target ABAP release used to gate release-sensitive cleanup rules."
         },
@@ -47,342 +88,171 @@
         },
         "abapCleaner.lint.severity": {
           "type": "string",
-          "enum": ["information", "hint", "warning", "error"],
+          "enum": [
+            "information",
+            "hint",
+            "warning",
+            "error"
+          ],
           "default": "information",
           "description": "Severity for ABAP Cleaner diagnostics."
         },
         "abapCleaner.lint.run": {
           "type": "string",
-          "enum": ["onSave", "onType"],
+          "enum": [
+            "onSave",
+            "onType"
+          ],
           "default": "onSave",
           "description": "When to refresh ABAP Cleaner diagnostics."
         },
-        "abapCleaner.rules.EXPORTING_KEYWORD.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Omit optional EXPORTING."
-        },
-        "abapCleaner.rules.CLOSING_BRACKETS_POSITION.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Close brackets at line end."
-        },
-        "abapCleaner.rules.ASSERT_EQUALS_BOOLEAN.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Use assert_true and assert_false."
-        },
-        "abapCleaner.rules.ASSERT_CLASS.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable bounded ASSERT_CLASS modernization."
-        },
-        "abapCleaner.rules.ASSERT_CLASS.assertClassName": {
-          "type": ["string", "null"],
-          "default": null,
-          "description": "Class called by bounded ASSERT_CLASS modernization."
-        },
-        "abapCleaner.rules.ASSERT_EQUALS_SUBRC.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Use assert_subrc instead of assert_equals."
-        },
-        "abapCleaner.rules.ASSERT_PARAMETER_ORDER.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Standardize assertion parameter order."
-        },
-        "abapCleaner.rules.STRING_TEMPLATE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Use string templates to assemble text."
-        },
-        "abapCleaner.rules.CHECK_IN_LOOP.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Convert CHECK in loop to IF NOT ... CONTINUE."
-        },
-        "abapCleaner.rules.CHECK_OUTSIDE_LOOP.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Convert CHECK outside loop to IF NOT ... RETURN."
-        },
-        "abapCleaner.rules.CALL_METHOD.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Replace CALL METHOD with functional call."
-        },
-        "abapCleaner.rules.ABAP_DOC_LANG.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Remove lang=\"en\" from ABAP Doc."
-        },
-        "abapCleaner.rules.ESCAPE_CHAR_FOR_PARAMS.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable bounded parameter escape cleanup."
-        },
-        "abapCleaner.rules.IMPLICIT_TYPE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Make implicit type explicit."
-        },
-        "abapCleaner.rules.NEEDLESS_CLEAR.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Remove needless CLEAR."
-        },
-        "abapCleaner.rules.EMPTY_SECTIONS.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable removal of empty protected sections from final local classes."
-        },
-        "abapCleaner.rules.CALCULATION_ASSIGNMENT.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable calculation assignments for ABAP 7.54 or later."
-        },
-        "abapCleaner.rules.ADD_TO_ETC.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable ADD, SUBTRACT, MULTIPLY, and DIVIDE modernization for ABAP 7.54 or later."
-        },
-        "abapCleaner.rules.CREATE_OBJECT.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable CREATE OBJECT modernization for ABAP 7.40 or later."
-        },
-        "abapCleaner.rules.CONDENSE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable bounded CONDENSE modernization for ABAP 7.02 or later."
-        },
-        "abapCleaner.rules.DESCRIBE_TABLE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable bounded DESCRIBE TABLE LINES modernization."
-        },
-        "abapCleaner.rules.EMPTY_COMMAND.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Remove standalone empty commands."
-        },
-        "abapCleaner.rules.END_OF_COMMENT.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Remove end-of comments."
-        },
-        "abapCleaner.rules.EQUALS_SIGN_CHAIN.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Resolve equals sign chain into several commands."
-        },
-        "abapCleaner.rules.EXIT_OUTSIDE_LOOP.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Replace EXIT outside loop with RETURN."
-        },
-        "abapCleaner.rules.MOVE_TO.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Replace obsolete MOVE TO with =."
-        },
-        "abapCleaner.rules.NEEDLESS_PARENTHESES.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Remove needless parentheses."
-        },
-        "abapCleaner.rules.PRAGMA_POSITION.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Move pragmas to correct position."
-        },
-        "abapCleaner.rules.PSEUDO_COMMENT.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable unambiguous trailing pseudo-comment modernization for ABAP 7.02 or later."
-        },
-        "abapCleaner.rules.RAISE_TYPE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable RAISE TYPE modernization for ABAP 7.52 or later."
-        },
-        "abapCleaner.rules.TYPO.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Correct frequent typos."
-        },
-        "abapCleaner.rules.TRANSLATE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Enable bounded TRANSLATE upper/lower modernization for ABAP 7.02 or later."
-        },
-        "abapCleaner.rules.RECEIVING_KEYWORD.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Omit RECEIVING."
+        "abapCleaner.trace": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Diagnostic logging to the ABAP Cleaner output channel (ABAP Cleaner: Show Log)."
         },
         "abapCleaner.rangeFormatting.expandMode": {
           "type": "string",
-          "enum": ["FULL_STATEMENT", "FULL_CONTROL_BLOCK", "FULL_METHOD", "FULL_CLASS", "FULL_DOCUMENT"],
+          "enum": [
+            "FULL_STATEMENT",
+            "FULL_CONTROL_BLOCK",
+            "FULL_METHOD",
+            "FULL_CLASS",
+            "FULL_DOCUMENT"
+          ],
           "default": "FULL_STATEMENT",
           "description": "Code boundary expanded by Format Selection; FULL_CONTROL_BLOCK selects the innermost IF, loop, CASE, TRY, SELECT, or PROVIDE block, and FULL_CLASS also covers interface blocks."
         },
-        "abapCleaner.rules.COMPARISON_OPERATOR.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Use consistent set of comparison operators."
-        },
-        "abapCleaner.rules.CHAIN_OF_ONE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Simplify a chain with one element."
-        },
-        "abapCleaner.rules.CHAIN_OF_ONE.processSimpleChains": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override whether to simplify eligible one-line chains."
-        },
-        "abapCleaner.rules.DECLARATION_CHAIN.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Unchain into multiple statements."
-        },
-        "abapCleaner.rules.NOT_IS.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Prefer IS NOT to NOT IS."
-        },
-        "abapCleaner.rules.ONE_COMMAND_PER_LINE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Move commands to own lines."
-        },
-        "abapCleaner.rules.LOGICAL_OPERATOR_POSITION.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Move AND/OR etc. from line end to next line start."
-        },
-        "abapCleaner.rules.SELF_REFERENCE_ME.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Remove the self-reference me->."
-        },
-        "abapCleaner.rules.READ_TABLE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Replace READ TABLE with table expression."
-        },
-        "abapCleaner.rules.VALUE_STATEMENT.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Shorten VALUE statements."
-        },
-        "abapCleaner.rules.COMMENT_TYPE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Comment with \" instead of * for prose."
-        },
-        "abapCleaner.rules.UPPER_AND_LOWER_CASE.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Convert upper and lower case."
-        },
-        "abapCleaner.rules.ABAP_DOC_PARAMETERS.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Add missing parameters to ABAP Doc."
-        },
-        "abapCleaner.rules.CLASS_DEFINITION.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Standardize CLASS ... DEFINITION."
-        },
-        "abapCleaner.rules.IF_BLOCK_AT_METHOD_END.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Replace long IF blocks at method end."
-        },
-        "abapCleaner.rules.IF_BLOCK_AT_LOOP_END.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Replace long IF blocks at loop end."
-        },
-        "abapCleaner.rules.CAMEL_CASE_IN_CDS_TEST.enabled": {
-          "type": ["boolean", "null"],
-          "default": null,
-          "description": "Override the active profile for Use CamelCase in test class for CDS view."
-        },
         "abapCleaner.rules.CDS_TEST_CLASS_LINES.enabled": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override the active profile for Standardize test classes for CDS views."
+          "markdownDescription": "**Standardize test classes for CDS views**\n\nCurrently removes exact generated ABAP Doc instructions and TODO comments before simple populated VALUE constructors in annotated local CDS test classes."
         },
         "abapCleaner.rules.EMPTY_LINES_IN_CLASS_DEFINITION.enabled": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override the active profile for Standardize empty lines in class definitions."
+          "markdownDescription": "**Standardize empty lines in class definitions**\n\nCurrently limits consecutive blank lines inside non-deferred class definitions."
         },
         "abapCleaner.rules.EMPTY_LINES_IN_CLASS_DEFINITION.maxEmptyLines": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "minimum": 1,
           "maximum": 20,
           "default": null,
-          "description": "Override maximum consecutive blank lines in class definitions."
+          "description": "Override: Maximum consecutive blank lines in class definitions."
         },
         "abapCleaner.rules.EMPTY_LINES_OUTSIDE_METHODS.enabled": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override the active profile for Separate methods and classes with empty lines."
+          "markdownDescription": "**Separate methods and classes with empty lines**\n\nCurrently standardizes blank lines directly between class and interface blocks."
         },
         "abapCleaner.rules.EMPTY_LINES_OUTSIDE_METHODS.emptyLinesBetweenClasses": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "minimum": 0,
           "maximum": 5,
           "default": null,
-          "description": "Override blank lines directly between class or interface blocks."
+          "description": "Override: Blank lines between classes or interfaces."
         },
         "abapCleaner.rules.EMPTY_LINES_WITHIN_METHODS.enabled": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override the active profile for Standardize empty lines within methods."
+          "markdownDescription": "**Standardize empty lines within methods**\n\nLimits consecutive blank lines inside METHOD and ENDMETHOD blocks."
         },
         "abapCleaner.rules.EMPTY_LINES_WITHIN_METHODS.maxEmptyLinesWithinMethods": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "minimum": 0,
           "maximum": 20,
           "default": null,
-          "description": "Override the maximum consecutive blank lines within methods."
+          "description": "Override: Maximum consecutive blank lines within methods."
+        },
+        "abapCleaner.rules.ONE_COMMAND_PER_LINE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Move commands to own lines**\n\nCurrently splits consecutive simple, uncommented same-line commands while retaining the existing indent."
+        },
+        "abapCleaner.rules.CLOSING_BRACKETS_POSITION.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Close brackets at line end**\n\nCurrently moves isolated closing parentheses and brackets to the preceding non-comment line."
         },
         "abapCleaner.rules.NEEDLESS_SPACES.enabled": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override the active profile for Remove needless spaces."
+          "markdownDescription": "**Remove needless spaces**\n\nCurrently removes excess same-line whitespace from empty parentheses and brackets."
         },
         "abapCleaner.rules.NEEDLESS_SPACES.processEmptyBrackets": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override whether to remove excess whitespace from empty parentheses and brackets."
+          "description": "Override: Remove multiple spaces from empty parentheses and brackets."
         },
         "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.enabled": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override the active profile for Put spaces around text literals."
+          "markdownDescription": "**Put spaces around text literals**\n\nAdds missing spaces between text literals and keywords, operators, or comments."
         },
         "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.separateFromKeywords": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override whether to separate text literals from keywords."
+          "description": "Override: Add space between keywords and text literals."
         },
         "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.separateFromOperators": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override whether to separate text literals from operators."
+          "description": "Override: Add space between operators and text literals."
         },
         "abapCleaner.rules.SPACES_IN_EMPTY_BRACKETS.separateFromComments": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": null,
-          "description": "Override whether to separate text literals from comments."
+          "description": "Override: Add space between text literals and comments."
         },
         "abapCleaner.rules.SPACE_BEFORE_PERIOD.enabled": {
           "type": [
@@ -390,7 +260,7 @@
             "null"
           ],
           "default": null,
-          "description": "Override the active profile for Remove space before commas and period."
+          "markdownDescription": "**Remove space before commas and period**\n\nRemoves same-line spaces before chain commas and statement periods."
         },
         "abapCleaner.rules.SPACE_BEFORE_PERIOD.executeOnComma": {
           "type": [
@@ -398,7 +268,7 @@
             "null"
           ],
           "default": null,
-          "description": "Override whether to remove spaces before chain commas."
+          "description": "Override: Remove space before chain commas."
         },
         "abapCleaner.rules.SPACE_BEFORE_PERIOD.executeOnPeriod": {
           "type": [
@@ -406,7 +276,7 @@
             "null"
           ],
           "default": null,
-          "description": "Override whether to remove spaces before statement periods."
+          "description": "Override: Remove space before statement periods."
         },
         "abapCleaner.rules.SPACE_AROUND_COMMENT_SIGN.enabled": {
           "type": [
@@ -414,7 +284,7 @@
             "null"
           ],
           "default": null,
-          "description": "Override the active profile for Put spaces around comment sign."
+          "markdownDescription": "**Put spaces around \" comment sign**\n\nEnsures at least one space before and after a line-end \" comment sign."
         },
         "abapCleaner.rules.SPACE_AROUND_COMMENT_SIGN.spaceBeforeCommentSign": {
           "type": [
@@ -422,7 +292,7 @@
             "null"
           ],
           "default": null,
-          "description": "Override whether to separate code and a comment sign."
+          "description": "Override: Separate code and \" comment with a space."
         },
         "abapCleaner.rules.SPACE_AROUND_COMMENT_SIGN.spaceAfterCommentSign": {
           "type": [
@@ -430,7 +300,687 @@
             "null"
           ],
           "default": null,
-          "description": "Override whether to start a comment with a space."
+          "description": "Override: Start \" comment with a space."
+        },
+        "abapCleaner.rules.LOCAL_DECLARATION_ORDER.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Reorder local declarations**\n\nCurrently only relocates a simple, non-chained, comment-free CONSTANTS name TYPE simple-type VALUE literal. declaration found anywhere in a method/form/function body to immediately after the last already-correctly-positioned leading CONSTANTS declaration, preserving relative order; TYPES/STATICS/DATA/FIELD-SYMBOLS grouping and reordering by first use are not yet handled. Refuses the whole body if it contains a BEGIN OF structured declaration or a dynamic ASSIGN."
+        },
+        "abapCleaner.rules.CLASS_DEFINITION.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize CLASS ... DEFINITION**\n\nCurrently orders PUBLIC before FINAL in a simple one-line comment-free class definition."
+        },
+        "abapCleaner.rules.ABAP_DOC_PARAMETERS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Add missing parameters to ABAP Doc**\n\nCurrently adds one parameter entry to a non-synchronized single-line ABAP Doc header above a simple METHODS IMPORTING declaration."
+        },
+        "abapCleaner.rules.ESCAPE_CHAR_FOR_PARAMS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize escaping of !parameters**\n\nCurrently adds or removes ! for one critical or noncritical parameter in a simple one-line METHODS IMPORTING declaration."
+        },
+        "abapCleaner.rules.NEEDLESS_CLEAR.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove needless CLEAR**\n\nCurrently removes an uncommented CLEAR immediately following a declared scalar local variable."
+        },
+        "abapCleaner.rules.IMPLICIT_TYPE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Make implicit type explicit**\n\nCurrently expands standalone uncommented untyped and name(length) DATA and TYPES declarations."
+        },
+        "abapCleaner.rules.EMPTY_SECTIONS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove empty class definition SECTIONs**\n\nCurrently removes empty uncommented visibility SECTIONs from final local class definitions."
+        },
+        "abapCleaner.rules.ABAP_DOC_LANG.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove lang=\"en\" from ABAP Doc**\n\nRemoves the English language attribute from synchronized ABAP Doc shorttexts."
+        },
+        "abapCleaner.rules.CHAIN_OF_ONE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Simplify a chain with one element**\n\nCurrently removes the colon from simple single-line chains with one element."
+        },
+        "abapCleaner.rules.CHAIN_OF_ONE.processSimpleChains": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "description": "Override: Simplify eligible one-line chains."
+        },
+        "abapCleaner.rules.DECLARATION_CHAIN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Unchain into multiple statements**\n\nCurrently unchains two-item, one-line comment-free DATA and TYPES declarations with simple TYPE names."
+        },
+        "abapCleaner.rules.UNUSED_PARAMETERS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Report unused parameters**\n\nCurrently adds a TODO comment for an IMPORTING parameter never referenced (by word-token text, including in comments) in the body of a non-chained METHODS declaration with only simple parameter type clauses, skipping methods with no executable statement in their body and parameters marked ##NEEDED; EXPORTING, CHANGING, and RETURNING parameters, and removing stale TODO comments, are not yet handled."
+        },
+        "abapCleaner.rules.UNUSED_VARIABLES.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Delete unused variables**\n\nCurrently deletes a standalone declared scalar variable only when its name never occurs again anywhere in its method, including in comments."
+        },
+        "abapCleaner.rules.FINAL_VARIABLE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use FINAL for immutable variables**\n\nCurrently replaces DATA( ) with FINAL( ) for a plain-assignment inline declaration that is read again but never reassigned, skipping methods that mention ASSIGNING, REF, FIELD-SYMBOL, or ASSIGN.\n\nRequires ABAP release 757 or later."
+        },
+        "abapCleaner.rules.ALIGN_ABAP_DOC.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align ABAP Doc**\n\nCurrently right-pads the keyword and name columns of \"! @parameter/@raising/@exception <name> | <text> ABAP Doc lines for a run of more than one such line, stopping at the first non-\"!-prefixed token; a run immediately followed by another comment (rather than the declaration it documents) is left untouched."
+        },
+        "abapCleaner.rules.ALIGN_METHODS_REDEFINITION.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align METHODS ... REDEFINITION**\n\nCurrently aligns the METHODS/name columns for a run of at least two consecutive single-line, non-chained METHODS <name> REDEFINITION. statements, using the same alignment engine as ALIGN_ASSIGNMENTS; the FINAL REDEFINITION variant, a chained METHODS: declaration, a trailing comment, and a statement spanning more than one line are not recognized and break the run."
+        },
+        "abapCleaner.rules.ALIGN_METHODS_FOR_TESTING.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align METHODS ... FOR TESTING**\n\nCurrently aligns the METHODS/name/FOR columns for a run of at least two consecutive single-line, non-chained METHODS <name> FOR TESTING. statements, using the same alignment engine as ALIGN_ASSIGNMENTS; ABSTRACT, RAISING, a chained METHODS: declaration, a trailing comment, and a statement spanning more than one line are not recognized and break the run."
+        },
+        "abapCleaner.rules.ALIGN_DECLARATIONS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align declarations**\n\nCurrently aligns DATA/CONSTANTS/FIELD-SYMBOLS declarations of the simple shape <name> TYPE <single-token-type> [VALUE <single-token-value>]. either across a run of at least two consecutive, non-chained declarations sharing the same keyword and VALUE-presence, or independently within one chained declaration; TYPES, BEGIN OF/END OF structures, LIKE, LENGTH/DECIMALS/READ-ONLY, a multi-token VALUE, a trailing comment, and a multi-line declaration are not recognized."
+        },
+        "abapCleaner.rules.ALIGN_LOGICAL_EXPRESSIONS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align logical expressions**\n\nCurrently aligns a flat chain of comparisons after IF/ELSEIF/CHECK/WHILE, joined only by AND or only by OR (never mixed), where every comparison uses the same single-character-or-two symbolic operator (=, <>, <, >, <=, >=) with a single-token left- and right-hand side and each condition after the first is on its own source line; the triggering keyword line itself is left untouched. NOT, parentheses, EQUIV, predicate expressions (IS INITIAL/IS BOUND/IN/BETWEEN), keyword-style operators (EQ/NE/...), mixed operator widths, and WHERE/ON/HAVING/WHEN SQL contexts are not recognized."
+        },
+        "abapCleaner.rules.ALIGN_SELECT_CLAUSES.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align SELECT clauses**\n\nCurrently repositions FROM/WHERE/GROUP BY/HAVING/ORDER BY/INTO/APPENDING onto their own line at SELECT-column+2 for an already-multi-line, single-query OpenSQL SELECT statement (matching the default \"keep existing\" one-liner policy: an already single-line statement is left untouched); a FROM already glued to the SELECT line with no JOIN is left as-is. UNION/INTERSECT/EXCEPT, subqueries, FOR ALL ENTRIES, %_HINTS, and the SELECT...ENDSELECT loop form are not recognized and refuse the whole statement; no column/value alignment is performed."
+        },
+        "abapCleaner.rules.ALIGN_SELECT_LISTS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align SELECT lists**\n\nCurrently repositions a SELECT field list onto one field per line, hang-indented to the first field's column, when every field is \"complex\" (more than one token, e.g. a function call or an AS addition, or a single tilde-qualified token such as t1~col) matching a conservative subset of upstream's default classification; a list mixing simple (bare, non-tilde) and complex fields, a single-field list, or an already single-line statement is left untouched. Also left-pads each field's name so a trailing AS alias lines up in a shared column across fields (a field with no AS is not padded itself, but its width still counts toward that shared column); a nested AS inside a function call is not mistaken for the field's own alias."
+        },
+        "abapCleaner.rules.ALIGN_WITH_SECOND_WORD.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align keywords with second word of first line**\n\nCurrently repositions WITH/INTO/ASSIGNING/WHERE continuation keywords (each starting its own source line) to the column of a READ or LOOP statement's own second word (e.g. TABLE in READ TABLE, AT in LOOP AT), when that second word is on the same line as READ/LOOP; AND/OR/EQUIV are never repositioned. An include list of just READ/LOOP is used in place of upstream's much longer exclude list, since both are unambiguous internal-table/loop operations with no Open-SQL homonym; other trigger keywords (INSERT/DELETE/MODIFY/EXPORT/IMPORT/SUBMIT/etc.) are not recognized."
+        },
+        "abapCleaner.rules.ALIGN_COND_EXPRESSIONS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align conditional expressions**\n\nCurrently splits a COND #( WHEN ... THEN ... [ELSE ...] ) constructor expression with exactly one WHEN branch onto separate WHEN/THEN/ELSE lines, each hang-indented to WHEN's own column, when the expression already spans more than one source line; an already single-line expression is left untouched. SWITCH, a LET ... IN prefix, a multi-WHEN (tabular) expression, and any comment inside the parentheses are not recognized and refuse the whole expression; the THEN/ELSE value content itself is never touched."
+        },
+        "abapCleaner.rules.ALIGN_ALIASES_FOR.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align ALIASES ... FOR ...**\n\nCurrently aligns the ALIASES/identifier/FOR columns for a run of at least two consecutive non-chained ALIASES <name> FOR <target>. statements to the widest cell in each column, using the same alignment engine as ALIGN_ASSIGNMENTS; a chained ALIASES: declaration or a statement with a trailing comment is not recognized and breaks the run."
+        },
+        "abapCleaner.rules.ALIGN_CLEAR_FREE_AND_SORT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align CLEAR:/FREE: chains**\n\nCurrently only breaks a CLEAR: or FREE: chain of plain-identifier items (no additions) onto its own lines, each indented to the column of the first item; SORT ... BY and CATCH chains are not yet handled."
+        },
+        "abapCleaner.rules.ALIGN_ASSIGNMENTS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align assignments to the same object**\n\nCurrently right-pads the identifier column and right-aligns the operator column (=, +=, -=, *=, /=, ?=, &&=) for a run of at least two consecutive simple assignments to the same structure variable (the text before an identifier's last \"-\"; a plain identifier with no \"-\" never groups with anything); the full multi-column AlignTable engine, other alignable command shapes, and the remaining 16 upstream ALIGN_* rules are not yet handled."
+        },
+        "abapCleaner.rules.CAMEL_CASE_IN_CDS_TEST.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use CamelCase in test class for CDS view**\n\nCurrently adds CI_NOWHERE only to exact SELECT statements of the annotated CDS test view."
+        },
+        "abapCleaner.rules.IF_BLOCK_AT_LOOP_END.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace long IF blocks at loop end**\n\nCurrently converts a final single-command IF operand IS INITIAL loop block to an early CONTINUE guard."
+        },
+        "abapCleaner.rules.IF_BLOCK_AT_METHOD_END.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace long IF blocks at method end**\n\nCurrently converts a final single-command IF operand IS INITIAL block to an early RETURN guard."
+        },
+        "abapCleaner.rules.UPPER_AND_LOWER_CASE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Convert upper and lower case**\n\nCurrently uppercases only recognized standalone statement-leading keywords."
+        },
+        "abapCleaner.rules.COMMENT_TYPE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Comment with \" instead of * for prose**\n\nCurrently converts only unambiguous column-one prose asterisk comments and preserves code-shaped comments."
+        },
+        "abapCleaner.rules.CONDENSE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace CONDENSE with string function**\n\nCurrently replaces adjacent declared scalar CONDENSE statements.\n\nRequires ABAP release 702 or later."
+        },
+        "abapCleaner.rules.STRING_TEMPLATE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use string templates to assemble text**\n\nCurrently converts safe backtick literal and identifier concatenations in simple assignments.\n\nRequires ABAP release 702 or later."
+        },
+        "abapCleaner.rules.ASSERT_PARAMETER_ORDER.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize assertion parameter order**\n\nCurrently places EXP before ACT in two-argument scalar assert_equals calls."
+        },
+        "abapCleaner.rules.ASSERT_CLASS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use assert class instead of ASSERT**\n\nCurrently converts simple one-line bound, initial, scalar comparison, ABAP boolean, and sy-subrc ASSERT predicates to a configurable assert class."
+        },
+        "abapCleaner.rules.ASSERT_CLASS.assertClassName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Override: Class called for converted assertions."
+        },
+        "abapCleaner.rules.DESCRIBE_TABLE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace DESCRIBE TABLE ... LINES with lines( )**\n\nCurrently replaces exact uncommented DESCRIBE TABLE ... LINES statements immediately before RETURN."
+        },
+        "abapCleaner.rules.TRANSLATE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace TRANSLATE with string functions**\n\nCurrently replaces adjacent declared scalar TRANSLATE ... TO UPPER or LOWER CASE statements.\n\nRequires ABAP release 702 or later."
+        },
+        "abapCleaner.rules.TYPO.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Correct frequent typos**\n\nCurrently corrects an embedded unambiguous subset of frequent typos in comments only."
+        },
+        "abapCleaner.rules.NEEDLESS_PARENTHESES.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove needless parentheses**\n\nCurrently removes one outer pair around single-line operand IS INITIAL predicates in selected logical statements."
+        },
+        "abapCleaner.rules.PRAGMA_POSITION.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Move pragmas to correct position**\n\nCurrently moves one complete, uncommented trailing pragma before a statement period."
+        },
+        "abapCleaner.rules.END_OF_COMMENT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove end-of comments**\n\nCurrently removes trailing METHOD, FORM, and FUNCTION end comments that exactly repeat the paired name."
+        },
+        "abapCleaner.rules.CHECK_IN_LOOP.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Convert CHECK in loop to IF NOT ... CONTINUE**\n\nCurrently converts single-line operand IS INITIAL checks in complete LOOP, DO, and WHILE blocks."
+        },
+        "abapCleaner.rules.CHECK_OUTSIDE_LOOP.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Convert CHECK outside loop to IF NOT ... RETURN**\n\nCurrently converts single-line operand IS INITIAL checks in complete procedures when no loop encloses them."
+        },
+        "abapCleaner.rules.EXIT_OUTSIDE_LOOP.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace EXIT outside loop with RETURN**\n\nCurrently converts bare EXIT statements inside complete methods, functions, and forms when no loop encloses them."
+        },
+        "abapCleaner.rules.EQUALS_SIGN_CHAIN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Resolve equals sign chain into several commands**\n\nCurrently splits one-line chains of plain identifiers with a simple final value."
+        },
+        "abapCleaner.rules.PSEUDO_COMMENT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace obsolete pseudo comments with pragmas**\n\nCurrently converts an embedded unambiguous subset of complete trailing pseudo-comments; requires ABAP 7.02 or later.\n\nRequires ABAP release 702 or later."
+        },
+        "abapCleaner.rules.RECEIVING_KEYWORD.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Omit RECEIVING**\n\nCurrently converts simple one-line method calls with only a simple RECEIVING parameter."
+        },
+        "abapCleaner.rules.EMPTY_COMMAND.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove standalone empty commands**\n\nCurrently removes standalone punctuation-only command lines while retaining trailing quote comments."
+        },
+        "abapCleaner.rules.ADD_TO_ETC.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace obsolete ADD TO etc. with calculation assignment**\n\nCurrently converts simple one-line ADD, SUBTRACT, MULTIPLY, and DIVIDE statements; requires ABAP 7.54 or later.\n\nRequires ABAP release 754 or later."
+        },
+        "abapCleaner.rules.RAISE_TYPE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace RAISE TYPE with RAISE NEW**\n\nCurrently converts simple one-line RAISE EXCEPTION TYPE and RAISE SHORTDUMP TYPE statements; requires ABAP 7.52 or later.\n\nRequires ABAP release 752 or later."
+        },
+        "abapCleaner.rules.CREATE_OBJECT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace CREATE OBJECT with NEW constructor**\n\nCurrently converts simple one-line static CREATE OBJECT statements without parameters; requires ABAP 7.40 or later.\n\nRequires ABAP release 740 or later."
+        },
+        "abapCleaner.rules.MOVE_TO.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace obsolete MOVE TO with =**\n\nCurrently converts simple one-line MOVE source TO destination statements."
+        },
+        "abapCleaner.rules.CALCULATION_ASSIGNMENT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Prefer calculation assignment operators**\n\nCurrently converts direct one-line identifier = identifier operator value assignments; requires ABAP 7.54 or later.\n\nRequires ABAP release 754 or later."
+        },
+        "abapCleaner.rules.ASSERT_EQUALS_SUBRC.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use assert_subrc instead of assert_equals**\n\nCurrently simplifies one-line assert_equals calls with exactly act = sy-subrc and a simple numeric exp value."
+        },
+        "abapCleaner.rules.ASSERT_EQUALS_BOOLEAN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use assert_true and assert_false**\n\nCurrently simplifies one-line assert_equals calls with exactly act and boolean exp parameters, including nested functional act expressions."
+        },
+        "abapCleaner.rules.CALL_METHOD.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace CALL METHOD with functional call**\n\nCurrently modernizes simple one-line static calls with existing or empty argument lists."
+        },
+        "abapCleaner.rules.EXPORTING_KEYWORD.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Omit optional EXPORTING**\n\nCurrently removes EXPORTING from simple single-line method calls with no other sections."
+        },
+        "abapCleaner.rules.COMPARISON_OPERATOR.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Use consistent set of comparison operators**\n\nCurrently converts textual operators in simple logical control statements."
+        },
+        "abapCleaner.rules.NOT_IS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Prefer IS NOT to NOT IS**\n\nTransforms simple single-line NOT operand IS predicates."
+        },
+        "abapCleaner.rules.LOGICAL_OPERATOR_POSITION.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Move AND/OR etc. from line end to next line start**\n\nCurrently moves terminal AND, OR, EQUIV, and selected LOOP or DELETE WHERE keywords to the next line."
+        },
+        "abapCleaner.rules.SELF_REFERENCE_ME.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Remove the self-reference me->**\n\nCurrently removes attached me-> only from direct method calls, never from attribute access."
+        },
+        "abapCleaner.rules.READ_TABLE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Replace READ TABLE with table expression**\n\nCurrently replaces simple one-line READ TABLE WITH KEY ... ASSIGNING statements with ASSIGN table expressions.\n\nRequires ABAP release 740 or later."
+        },
+        "abapCleaner.rules.VALUE_STATEMENT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Shorten VALUE statements**\n\nCurrently factors one shared scalar assignment from exactly two simple one-line VALUE rows.\n\nRequires ABAP release 740 or later."
+        },
+        "abapCleaner.rules.INSET.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Indent lines**\n\nCurrently reindents the leading line of each recognized command (and its attached leading comments) to match IF/CASE/DO/WHILE/LOOP/TRY/SELECT/PROVIDE and CLASS/INTERFACE/METHOD/FORM/FUNCTION nesting depth; leaves chained same-line statements and multi-line continuation lines untouched."
+        },
+        "abapCleaner.rules.DDL_EMPTY_LINES_WITHIN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize empty lines within sections**\n\nCurrently only caps consecutive blank lines to at most one and trims blank lines at document end; does not yet classify DDL sections (parameters, joins, associations, select list)."
+        },
+        "abapCleaner.rules.DDL_SPACES_AROUND_SIGNS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize spaces around colon, comma etc.**\n\nCurrently standardizes comma spacing and //-- line-end comment marker spacing only; colon and arithmetic-operator spacing are not yet handled."
+        },
+        "abapCleaner.rules.DDL_SPACES_AROUND_BRACKETS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize spaces around brackets**\n\nCurrently standardizes spacing around [ ] cardinality and path-expression brackets only; parentheses ( ) for functions, ABAP types, and arithmetics are not yet handled."
+        },
+        "abapCleaner.rules.DDL_POSITION_BRACES.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Break before select list braces**\n\nCurrently only enforces a line break with no indent before the opening and closing brace of each top-level select list; configurable break modes/indents and the legacy brace-less SELECT...FROM syntax are not yet handled."
+        },
+        "abapCleaner.rules.DDL_POSITION_CLAUSES.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Break before WHERE clause etc.**\n\nCurrently only enforces a line break with no indent before top-level WHERE, HAVING, GROUP BY, UNION [ALL], INTERSECT, and EXCEPT keywords, condensing a split GROUP BY/UNION ALL phrase onto one line; forcing an extra blank line before UNION/INTERSECT/EXCEPT and re-indenting a multi-line condition after its keyword moves are not yet handled."
+        },
+        "abapCleaner.rules.DDL_POSITION_SELECT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Break before AS SELECT etc.**\n\nCurrently only enforces a line break with indent 2 before \"AS SELECT [DISTINCT] FROM\", \"AS PROJECTION ON\", and \"{EXCEPT|INTERSECT|UNION [ALL]} SELECT [DISTINCT] FROM\", condensing each phrase onto one line; breaking before the data source and the extra blank line after WITH PARAMETERS (...) are not yet handled."
+        },
+        "abapCleaner.rules.DDL_POSITION_DEFINE.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Break before DEFINE etc.**\n\nCurrently only enforces a line break with no indent before the first top-level DEFINE/EXTEND/ANNOTATE keyword, condensing the following structural-keyword phrase up to the entity name (via a fixed keyword list, not full entity-name pattern matching) onto one line, and breaks before a top-level WITH PARAMETERS at indent 2, condensing that phrase; joining an already-broken entity name, forcing a blank line before DEFINE/EXTEND/ANNOTATE, re-indenting each parameter, and ROLE/ACCESSPOLICY declarations are not yet handled."
+        },
+        "abapCleaner.rules.DDL_EMPTY_LINES_BETWEEN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize empty lines between sections**\n\nCurrently only enforces at least one blank line between trailing annotations and DEFINE/EXTEND/ANNOTATE, before/after the select list braces, and no blank line directly after { or before }, without ever creating a break where none exists; the boundaries around JOIN, ASSOCIATION, and WITH PARAMETERS (...) are not yet handled."
+        },
+        "abapCleaner.rules.DDL_ANNO_LAYOUT.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Standardize annotation layout**\n\nCurrently only condenses an annotation's dotted path onto one contiguous run with no internal whitespace and standardizes spacing around every colon (no space before, one space after, unless already followed by a line break); nesting depth/order, one-liner detection, value/table alignment, and inner brace/bracket spacing are not yet handled."
+        },
+        "abapCleaner.rules.DDL_ANNO_NESTING.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Rearrange annotations**\n\nCurrently nests a run of 5 or more CONSECUTIVE simple annotations (@path: single-token-value, no existing {}/[] structure, no trailing comment) sharing an exact parent path of 3 or more segments into one @parentPath: { name: value, ... } annotation, always written multi-line (never collapsed to one line, matching default behavior only for runs at or above the 5-member threshold where a one-liner is never a candidate regardless of width) with member names column-padded and continuation lines hanging-indented to the brace column. Fewer than 5 siblings, a parent path shorter than 3 segments, a gap (blank line or comment) between candidates, non-adjacent same-prefix annotations, deeper nesting, and all sort-order/empty-line/allow-block-list configuration are not recognized."
+        },
+        "abapCleaner.rules.DDL_POSITION_JOIN.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Break before JOINs**\n\nCurrently enforces a line break at indent 4 before every top-level JOIN keyword phrase, condensing it onto one line, and forces a break before ON at indent 6 for every JOIN in the file if any of them already has a multi-line condition (matching the file-wide default); the WITH DEFAULT FILTER clause, breaking before the data source, and re-indenting a multi-line condition's continuation lines are not yet handled."
+        },
+        "abapCleaner.rules.DDL_POSITION_ASSOCIATION.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Break before ASSOCIATIONs**\n\nCurrently enforces a line break at indent 2 before every top-level ASSOCIATION/COMPOSITION keyword phrase (including its cardinality bracket), condensing it onto one line, and forces a break before ON at indent 4 for every ASSOCIATION in the file if any of them already has a multi-line condition (matching the file-wide default); the WITH DEFAULT FILTER clause, breaking before the data source, and re-indenting a multi-line condition's continuation lines are not yet handled."
+        },
+        "abapCleaner.rules.DDL_ALIGN_ENTITY_PARAMETERS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align view parameters**\n\nCurrently enforces indent 4 and left-pads the name/colon columns of a WITH PARAMETERS clause when every parameter has the simple shape <name> : <single-token-type>; an annotation directly above a parameter is left untouched, and a single parameter with a multi-token type (e.g. abap.char( 10 )) cancels alignment for the whole clause rather than misreading it."
+        },
+        "abapCleaner.rules.DDL_ALIGN_SOURCE_PARAMETERS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align source parameters**\n\nCurrently left-pads the name/colon columns of parameters passed to a parameterized data source (select from/join/on Entity( P_Param : value, ... )) when every parameter has the simple shape <name> : <single-token-value> and each is on its own source line; a dotted path like $parameters.P_AnyParam counts as one token, but a multi-token value (e.g. an arithmetic expression) cancels alignment for the whole clause; repositioning the opening parenthesis or the AS <alias> after the closing parenthesis is not yet handled."
+        },
+        "abapCleaner.rules.DDL_ALIGN_LOGICAL_EXPRESSIONS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align logical expressions**\n\nCurrently aligns a flat chain of comparisons in a top-level JOIN/ASSOCIATION ON condition, joined only by AND or only by OR (never mixed), where every comparison uses the same single-token symbolic operator (=, <>, <, >, <=, >=) with a single-token left- and right-hand side and each condition after the first is on its own source line; the ON line itself is left untouched. WHERE/HAVING/WHEN/path-expression-filter conditions, NOT, parentheses, predicate expressions, and mixed operator widths are not recognized."
+        },
+        "abapCleaner.rules.DDL_ALIGN_FUNCTION_PARAMETERS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align function parameters**\n\nCurrently left-pads the name/=> columns of a CDS built-in function call's named parameters (e.g. currency_conversion( amount => a, source_currency => b )) when every parameter has the simple shape <name> => <single-token-value> and each is on its own source line; a nested function call aligns independently of its enclosing call. A single parameter with a multi-token value cancels alignment for the whole call rather than skipping just that parameter (stricter than upstream, which skips only the non-matching parameter); repositioning the opening/closing parenthesis is not handled."
+        },
+        "abapCleaner.rules.DDL_ALIGN_FIELD_LISTS.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align field lists**\n\nCurrently forces a GROUP BY field list of 2+ fields onto one field per line, hang-indented to the first field's own column, unconditionally (matching upstream's default, which does not gate on field complexity or existing one-line layout); a function call's internal commas do not split fields. The DDIC-view parenthesized name list (this rule's other upstream target), comment re-indentation, and comma-spacing normalization are not handled; the first field's own position/indent (upstream's GroupByListPos) is not repositioned."
+        },
+        "abapCleaner.rules.DDL_ALIGN_DATA_SOURCES.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align data sources**\n\nCurrently left-pads the data-source name across a FROM clause and its JOIN/ASSOCIATION phrases so each row's AS alias (and, when on the same source line, ON condition) lines up in a shared column; a data source with no alias is not padded itself, but its width still counts toward the shared column. The JOIN/ASSOCIATION keyword phrase itself is not aligned into its own column (already positioned by DDL_POSITION_JOIN/DDL_POSITION_ASSOCIATION); an AS alias or ON condition already on its own separate source line is left untouched rather than merged upward. A run of fewer than 2 data sources, or one whose data source doesn't reduce to a simple name (optionally parameterized) plus AS alias, is left untouched."
+        },
+        "abapCleaner.rules.DDL_ALIGN_SELECT_LIST.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Align select list**\n\nCurrently left-pads each select-list element (a KEY/VIRTUAL prefix, if present, is folded into the element itself rather than its own column) so every element's AS alias lines up in a shared column; an element with no alias is not padded itself, but its width still counts toward the shared column. Requires the list to already be one element per line (refuses if any two elements share a source line) and refuses the whole list if any element contains a comment. Forcing a one-element-per-line layout, the DDIC-view name-list-adjacent layout concerns, and any comment-integration behavior are not implemented."
+        },
+        "abapCleaner.rules.DDL_TYPO.enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null,
+          "markdownDescription": "**Correct frequent typos in DDL comments**\n\nCurrently corrects the same narrow, unambiguous typo-correction table used by the ABAP TYPO rule inside DDL/DCL comments only; adding TODO comments on suspect annotation values and British-to-American conversion are not yet handled."
         }
       }
     }
